@@ -195,3 +195,57 @@ module.exports.unfollowUser = async (req,res) => {
     }
 
 }
+
+module.exports.getUserFollowers = async (req,res) => {
+    try {
+        const username = req.params.username.toLowerCase();
+        const user = await User.findOne({username}).populate("followers","username")
+
+        if(!user){
+            return res.status(400).json({
+                status: 'fail',
+                error: 'Invalid username'
+            })
+        }
+
+        const followers = user.followers
+        return res.status(200).json({
+                status: 'success',
+                data: followers
+            })
+        
+
+    } catch (err) {
+        return res.status(400).json({
+            status: 'fail',
+            error: err.message
+        })
+    }
+}
+
+module.exports.getUserFollowings = async(req,res) => {
+    try {
+        const username = req.params.username.toLowerCase();
+        const user = await User.findOne({username}).populate("followings","username")
+
+        if(!user){
+            return res.status(400).json({
+                status: 'fail',
+                error: 'Invalid username'
+            })
+        }
+
+        const followings = user.followings
+        return res.status(200).json({
+                status: 'success',
+                data: followings
+            })
+        
+
+    } catch (err) {
+        return res.status(400).json({
+            status: 'fail',
+            error: err.message
+        })
+    }
+}
